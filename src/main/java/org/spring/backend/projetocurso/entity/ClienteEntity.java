@@ -13,11 +13,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.spring.backend.projetocurso.enums.TipoCliente;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
+@Table(name="cliente")
 public class ClienteEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -34,6 +36,9 @@ public class ClienteEntity implements Serializable{
 	@ElementCollection
 	@CollectionTable(name="TELEFONE")
 	private Set<String> telefones = new HashSet<>();
+	
+	@OneToMany(mappedBy="cliente")
+	private List<PedidoEntity> pedidos = new ArrayList<>();
 
 	public ClienteEntity() {
 		super();
@@ -104,6 +109,16 @@ public class ClienteEntity implements Serializable{
 		this.telefones = telefones;
 	}
 
+
+	public List<PedidoEntity> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<PedidoEntity> pedidos) {
+		this.pedidos = pedidos;
+	}
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -128,6 +143,5 @@ public class ClienteEntity implements Serializable{
 			return false;
 		return true;
 	}
-	
 	
 }

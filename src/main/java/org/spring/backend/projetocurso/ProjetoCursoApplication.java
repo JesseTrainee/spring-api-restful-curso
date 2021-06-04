@@ -1,5 +1,6 @@
 package org.spring.backend.projetocurso;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.spring.backend.projetocurso.entity.CategoriaEntity;
@@ -7,13 +8,20 @@ import org.spring.backend.projetocurso.entity.CidadeEntity;
 import org.spring.backend.projetocurso.entity.ClienteEntity;
 import org.spring.backend.projetocurso.entity.EnderecoEntity;
 import org.spring.backend.projetocurso.entity.EstadoEntity;
+import org.spring.backend.projetocurso.entity.PagamentoComBoleto;
+import org.spring.backend.projetocurso.entity.PagamentoComCartao;
+import org.spring.backend.projetocurso.entity.PagamentoEntity;
+import org.spring.backend.projetocurso.entity.PedidoEntity;
 import org.spring.backend.projetocurso.entity.ProdutoEntity;
+import org.spring.backend.projetocurso.enums.EstadoPagamento;
 import org.spring.backend.projetocurso.enums.TipoCliente;
 import org.spring.backend.projetocurso.repository.CategoriaRepository;
 import org.spring.backend.projetocurso.repository.CidadeRepository;
 import org.spring.backend.projetocurso.repository.ClienteRepository;
 import org.spring.backend.projetocurso.repository.EnderecoRepository;
 import org.spring.backend.projetocurso.repository.EstadoRepository;
+import org.spring.backend.projetocurso.repository.PagamentoRepository;
+import org.spring.backend.projetocurso.repository.PedidoRepository;
 import org.spring.backend.projetocurso.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -34,7 +42,12 @@ public class ProjetoCursoApplication implements CommandLineRunner{
 	@Autowired
 	ClienteRepository clienteRepository;
 	@Autowired
+	PedidoRepository pedidoRepository;
+	@Autowired
+	PagamentoRepository pagamentoRepository;
+	@Autowired
 	EnderecoRepository enderecoRepository;
+	
 	
 	
 	public static void main(String[] args) {
@@ -85,6 +98,19 @@ public class ProjetoCursoApplication implements CommandLineRunner{
 		
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1,e2));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		PedidoEntity ped1 = new PedidoEntity(null,sdf.parse("30/09/2017 10:32"),cli1,e1);
+		PedidoEntity ped2 = new PedidoEntity(null,sdf.parse("10/10/2017 19:35"),cli1,e2);
+		
+		PagamentoEntity pagto1 = new PagamentoComCartao(null,EstadoPagamento.QUITADO,ped1,6);
+		PagamentoEntity pagto2 = new PagamentoComBoleto(null,EstadoPagamento.PENDENTE,ped2,sdf.parse("20/10/2021 12:21"),null);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
 	}
 	
 	
