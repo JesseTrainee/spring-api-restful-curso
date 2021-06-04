@@ -48,11 +48,11 @@ public abstract class PagamentoEntity implements Serializable{
 	}
 
 	public EstadoPagamento getPagamento() {
-		return pagamento;
+		return EstadoPagamento.toEnum(estado);
 	}
 
-	public void setPagamento(EstadoPagamento pagamento) {
-		this.pagamento = pagamento;
+	public void setPagamento(EstadoPagamento estado) {
+		this.estado = estado.getCod();
 	}
 
 	public PedidoEntity getPedido() {
